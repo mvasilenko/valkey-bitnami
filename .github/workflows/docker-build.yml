@@ -8,6 +8,7 @@ on:
 env:
   VALKEY_IMAGE: ghcr.io/mvasilenko/valkey
   SENTINEL_IMAGE: ghcr.io/mvasilenko/valkey-sentinel
+  KUBECTL_IMAGE: ghcr.io/mvasilenko/kubectl
 
 jobs:
   build-push:
@@ -56,4 +57,12 @@ jobs:
           push: true
           tags: ${{ env.SENTINEL_IMAGE }}:${{ steps.vars.outputs.tag }}
           build-args: ${{ steps.vars.outputs.build_args }}
+          platforms: linux/amd64,linux/arm64
+
+      - name: Build and push kubectl
+        uses: docker/build-push-action@v6
+        with:
+          context: docker/kubectl
+          push: true
+          tags: ${{ env.KUBECTL_IMAGE }}:latest
           platforms: linux/amd64,linux/arm64
