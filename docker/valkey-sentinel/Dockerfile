@@ -2,7 +2,7 @@ ARG VALKEY_VERSION=9.0.3
 
 FROM docker.io/valkey/valkey:${VALKEY_VERSION} AS valkey-src
 
-FROM docker.io/bitnami/minideb:bookworm AS base
+FROM docker.io/bitnami/minideb:trixie AS base
 
 ARG VALKEY_VERSION
 ARG TARGETARCH=amd64
