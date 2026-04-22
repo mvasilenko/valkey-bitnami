@@ -1,0 +1,60 @@
+This repository contains original work and incorporates components from the
+following upstream projects. Each component is used under its respective license.
+
+-------------------------------------------------------------------------------
+Valkey
+  Source:  https://github.com/valkey-io/valkey
+  Image:   docker.io/valkey/valkey
+  License: BSD-3-Clause
+  Usage:   valkey-server, valkey-cli, valkey-benchmark binaries copied into
+           docker/valkey and docker/valkey-sentinel images.
+
+-------------------------------------------------------------------------------
+Bitnami container scripts
+  Source:  https://github.com/bitnami/containers
+  License: Apache-2.0
+  Copyright: Broadcom, Inc. All Rights Reserved.
+  Usage:   Shell scripts under docker/valkey/scripts/ and
+           docker/valkey-sentinel/scripts/ (entrypoint.sh, run.sh, setup.sh,
+           postunpack.sh, lib*.sh, valkey-env.sh, valkey-sentinel-env.sh).
+           Copyright headers are preserved in each file.
+
+-------------------------------------------------------------------------------
+Bitnami Valkey Helm chart
+  Source:  https://github.com/bitnami/charts  (charts/valkey)
+  License: Apache-2.0
+  Copyright: Broadcom, Inc. All Rights Reserved.
+  Usage:   Vendored at charts/valkey/ (version 4.0.2). A projected-volume
+           patch for caSecretName TLS has been applied to
+           charts/valkey/templates/sentinel/statefulset.yaml.
+
+-------------------------------------------------------------------------------
+bitnami/minideb
+  Source:  https://github.com/bitnami/minideb
+  Image:   docker.io/bitnami/minideb:trixie
+  License: Apache-2.0
+  Copyright: Broadcom, Inc. All Rights Reserved.
+  Usage:   Base OS layer for docker/valkey and docker/valkey-sentinel images.
+
+-------------------------------------------------------------------------------
+wait-for-port
+  Source:  https://github.com/bitnami/wait-for-port
+  License: Apache-2.0
+  Copyright: Broadcom, Inc. All Rights Reserved.
+  Usage:   Binary installed into docker/valkey image at
+           /opt/bitnami/common/bin/wait-for-port (release v1.0.10).
+
+-------------------------------------------------------------------------------
+kubectl
+  Source:  https://github.com/kubernetes/kubernetes
+  Binary:  https://dl.k8s.io/release/v<version>/bin/linux/<arch>/kubectl
+  License: Apache-2.0
+  Copyright: The Kubernetes Authors
+  Usage:   kubectl binary installed into docker/kubectl image.
+
+-------------------------------------------------------------------------------
+Alpine Linux
+  Source:  https://alpinelinux.org
+  Image:   docker.io/library/alpine:3
+  License: MIT (build scripts); individual packages retain their own licenses.
+  Usage:   Base OS layer for docker/kubectl image.

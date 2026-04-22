@@ -13,7 +13,8 @@ SHELL ["/bin/bash", "-o", "errexit", "-o", "nounset", "-o", "pipefail", "-c"]
 
 RUN install_packages ca-certificates libssl3 procps
 
-# valkey-sentinel binary is the same valkey-server binary with --sentinel flag
+# valkey binaries — github.com/valkey-io/valkey — BSD-3-Clause
+# valkey-sentinel is the same valkey-server binary invoked with --sentinel
 RUN mkdir -p /opt/bitnami/valkey-sentinel/bin
 COPY --from=valkey-src /usr/local/bin/valkey-server /opt/bitnami/valkey-sentinel/bin/valkey-server
 COPY --from=valkey-src /usr/local/bin/valkey-cli    /opt/bitnami/valkey-sentinel/bin/valkey-cli

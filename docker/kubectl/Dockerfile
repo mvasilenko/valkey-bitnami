@@ -1,3 +1,6 @@
+# kubectl — github.com/kubernetes/kubernetes — Apache-2.0, Copyright The Kubernetes Authors
+# alpine base — alpinelinux.org — MIT (build scripts); packages retain their own licenses
+
 ARG KUBECTL_VERSION=1.34.0
 
 FROM alpine:3

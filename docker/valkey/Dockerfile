@@ -13,7 +13,7 @@ SHELL ["/bin/bash", "-o", "errexit", "-o", "nounset", "-o", "pipefail", "-c"]
 
 RUN install_packages ca-certificates curl libgcc-s1 libgomp1 libssl3 libstdc++6 procps
 
-# wait-for-port from github.com/bitnami/wait-for-port (Apache-2.0)
+# wait-for-port — github.com/bitnami/wait-for-port — Apache-2.0, Copyright Broadcom, Inc.
 RUN mkdir -p /opt/bitnami/common/bin && \
     curl -fsSL "https://github.com/bitnami/wait-for-port/releases/download/v1.0.10/wait-for-port-linux-${TARGETARCH}.tar.gz" \
       -o /tmp/wfp.tar.gz && \
@@ -21,7 +21,7 @@ RUN mkdir -p /opt/bitnami/common/bin && \
     mv /opt/bitnami/common/bin/wait-for-port-linux-${TARGETARCH} /opt/bitnami/common/bin/wait-for-port && \
     rm /tmp/wfp.tar.gz
 
-# valkey binaries from official OSS image (Apache-2.0)
+# valkey binaries — github.com/valkey-io/valkey — BSD-3-Clause
 RUN mkdir -p /opt/bitnami/valkey/bin
 COPY --from=valkey-src /usr/local/bin/valkey-server    /opt/bitnami/valkey/bin/valkey-server
 COPY --from=valkey-src /usr/local/bin/valkey-cli       /opt/bitnami/valkey/bin/valkey-cli
