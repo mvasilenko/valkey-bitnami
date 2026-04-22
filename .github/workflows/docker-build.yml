@@ -2,11 +2,10 @@ name: Build and push Valkey images
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [main]
+    tags: ['v*']
 
 env:
-  REGISTRY: ghcr.io
   VALKEY_IMAGE: ghcr.io/mvasilenko/valkey
   SENTINEL_IMAGE: ghcr.io/mvasilenko/valkey-sentinel
 
@@ -19,9 +18,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Extract version from tag
-        id: version
-        run: echo "version=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+      - name: Compute image tag and build args
+        id: vars
+        run: |
+          if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+            echo "tag=$VERSION" >> $GITHUB_OUTPUT
+            echo "build_args=VALKEY_VERSION=$VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "tag=latest" >> $GITHUB_OUTPUT
+            echo "build_args=" >> $GITHUB_OUTPUT
+          fi
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -38,8 +45,8 @@ jobs:
         with:
           context: docker/valkey
           push: true
-          tags: ${{ env.VALKEY_IMAGE }}:${{ steps.version.outputs.version }}
-          build-args: VALKEY_VERSION=${{ steps.version.outputs.version }}
+          tags: ${{ env.VALKEY_IMAGE }}:${{ steps.vars.outputs.tag }}
+          build-args: ${{ steps.vars.outputs.build_args }}
           platforms: linux/amd64,linux/arm64
 
       - name: Build and push valkey-sentinel
@@ -47,6 +54,6 @@ jobs:
         with:
           context: docker/valkey-sentinel
           push: true
-          tags: ${{ env.SENTINEL_IMAGE }}:${{ steps.version.outputs.version }}
-          build-args: VALKEY_VERSION=${{ steps.version.outputs.version }}
+          tags: ${{ env.SENTINEL_IMAGE }}:${{ steps.vars.outputs.tag }}
+          build-args: ${{ steps.vars.outputs.build_args }}
           platforms: linux/amd64,linux/arm64
