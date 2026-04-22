@@ -1,5 +1,7 @@
 ARG VALKEY_VERSION=9.0.3
 
+FROM docker.io/valkey/valkey:${VALKEY_VERSION} AS valkey-src
+
 FROM docker.io/bitnami/minideb:bookworm AS base
 
 ARG VALKEY_VERSION
@@ -20,9 +22,9 @@ RUN mkdir -p /opt/bitnami/common/bin && \
 
 # valkey binaries from official OSS image (Apache-2.0)
 RUN mkdir -p /opt/bitnami/valkey/bin
-COPY --from=docker.io/valkey/valkey:${VALKEY_VERSION} /usr/local/bin/valkey-server    /opt/bitnami/valkey/bin/valkey-server
-COPY --from=docker.io/valkey/valkey:${VALKEY_VERSION} /usr/local/bin/valkey-cli       /opt/bitnami/valkey/bin/valkey-cli
-COPY --from=docker.io/valkey/valkey:${VALKEY_VERSION} /usr/local/bin/valkey-benchmark /opt/bitnami/valkey/bin/valkey-benchmark
+COPY --from=valkey-src /usr/local/bin/valkey-server    /opt/bitnami/valkey/bin/valkey-server
+COPY --from=valkey-src /usr/local/bin/valkey-cli       /opt/bitnami/valkey/bin/valkey-cli
+COPY --from=valkey-src /usr/local/bin/valkey-benchmark /opt/bitnami/valkey/bin/valkey-benchmark
 
 RUN ln -s valkey-server    /opt/bitnami/valkey/bin/valkey-sentinel  && \
     ln -s valkey-server    /opt/bitnami/valkey/bin/valkey-check-aof && \

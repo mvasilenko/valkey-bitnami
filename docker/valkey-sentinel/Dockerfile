@@ -1,5 +1,7 @@
 ARG VALKEY_VERSION=9.0.3
 
+FROM docker.io/valkey/valkey:${VALKEY_VERSION} AS valkey-src
+
 FROM docker.io/bitnami/minideb:bookworm AS base
 
 ARG VALKEY_VERSION
@@ -13,8 +15,8 @@ RUN install_packages ca-certificates libssl3 procps
 
 # valkey-sentinel binary is the same valkey-server binary with --sentinel flag
 RUN mkdir -p /opt/bitnami/valkey-sentinel/bin
-COPY --from=docker.io/valkey/valkey:${VALKEY_VERSION} /usr/local/bin/valkey-server /opt/bitnami/valkey-sentinel/bin/valkey-server
-COPY --from=docker.io/valkey/valkey:${VALKEY_VERSION} /usr/local/bin/valkey-cli    /opt/bitnami/valkey-sentinel/bin/valkey-cli
+COPY --from=valkey-src /usr/local/bin/valkey-server /opt/bitnami/valkey-sentinel/bin/valkey-server
+COPY --from=valkey-src /usr/local/bin/valkey-cli    /opt/bitnami/valkey-sentinel/bin/valkey-cli
 
 RUN ln -s valkey-server /opt/bitnami/valkey-sentinel/bin/valkey-sentinel && \
     ln -s valkey-server /opt/bitnami/valkey-sentinel/bin/redis-server    && \
