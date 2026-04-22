@@ -1,0 +1,5 @@
+apiVersion: v2
+appVersion: "9.0.3"
+description: Valkey Sentinel HA with createPrimary tracking and projected-volume TLS CA injection (OSS images)
+name: valkey-bitnami-oss
+version: 0.1.0

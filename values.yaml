@@ -1,0 +1,61 @@
+fullnameOverride: valkey-bitnami-oss
+
+valkey:
+  global:
+    security:
+      allowInsecureImages: true
+  # Default: bitnamilegacy images (free, no build required, Valkey 8.1.3)
+  # For Valkey 9.x: build docker/valkey/ with VALKEY_VERSION=9.0.3 and override below
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/valkey
+    tag: 8.1.3-debian-12-r3
+  architecture: replication
+  sentinel:
+    enabled: true
+    image:
+      registry: docker.io
+      repository: bitnamilegacy/valkey-sentinel
+      tag: 8.1.3-debian-12-r3
+    downAfterMilliseconds: 5000
+    failoverTimeout: 10000
+    service:
+      createPrimary: true
+  kubectl:
+    image:
+      registry: docker.io
+      repository: bitnami/kubectl
+      tag: latest
+  serviceAccount:
+    create: true
+  replica:
+    replicaCount: 3
+    automountServiceAccountToken: true
+    pdb:
+      create: true
+      maxUnavailable: 1
+  rbac:
+    create: true
+  auth:
+    enabled: true
+    existingSecret: valkey-bitnami-oss-credentials
+    existingSecretPasswordKey: password
+  tls:
+    enabled: false
+    existingSecret: valkey-bitnami-oss-tls
+    certFilename: tls.crt
+    certKeyFilename: tls.key
+    certCAFilename: ca.crt
+    # caSecretName: ""  # set when CA cert is in a separate secret from the leaf cert
+
+certificate:
+  clusterIssuer: ""
+  secretName: valkey-bitnami-oss-tls
+  duration: 2160h
+  renewBefore: 360h
+  dnsNames:
+    - valkey-bitnami-oss
+    - valkey-bitnami-oss-primary
+
+pushSecret:
+  enabled: false

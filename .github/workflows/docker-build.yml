@@ -1,0 +1,52 @@
+name: Build and push Valkey images
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  REGISTRY: ghcr.io
+  VALKEY_IMAGE: ghcr.io/mvasilenko/valkey
+  SENTINEL_IMAGE: ghcr.io/mvasilenko/valkey-sentinel
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push valkey
+        uses: docker/build-push-action@v6
+        with:
+          context: docker/valkey
+          push: true
+          tags: ${{ env.VALKEY_IMAGE }}:${{ steps.version.outputs.version }}
+          build-args: VALKEY_VERSION=${{ steps.version.outputs.version }}
+          platforms: linux/amd64,linux/arm64
+
+      - name: Build and push valkey-sentinel
+        uses: docker/build-push-action@v6
+        with:
+          context: docker/valkey-sentinel
+          push: true
+          tags: ${{ env.SENTINEL_IMAGE }}:${{ steps.version.outputs.version }}
+          build-args: VALKEY_VERSION=${{ steps.version.outputs.version }}
+          platforms: linux/amd64,linux/arm64
